@@ -1,23 +1,61 @@
-import logo from './logo.svg';
+import React, { useState } from 'react';
 import './App.css';
 
+import Home from './pages/Home';
+import Login from './pages/Login';
+import Register from './pages/Register';
+import Modules from './pages/Modules';
+import Quiz from './pages/Quiz';
+import Navbar from './components/Navbar';
+
 function App() {
+  // simple client-side routing using state to avoid extra dependencies
+  const [route, setRoute] = useState('home'); // 'home' | 'login' | 'register' | 'modules' | 'quiz'
+  const [user, setUser] = useState(null);
+  const [quizConfig, setQuizConfig] = useState(null);
+
+  const navigate = (to, opts) => {
+    if (opts) setQuizConfig(opts);
+    setRoute(to);
+  };
+
+  const handleLogin = (userData) => {
+    setUser(userData);
+    setRoute('modules');
+  };
+
+  const handleLogout = () => {
+    setUser(null);
+    setRoute('home');
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className="App-root">
+      <Navbar onNavigate={navigate} user={user} onLogout={handleLogout} />
+
+      <main className="App-main">
+        {route === 'home' && (
+          <Home onNavigate={navigate} user={user} />
+        )}
+
+        {route === 'login' && (
+          <Login onLogin={handleLogin} onNavigate={navigate} />
+        )}
+
+        {route === 'register' && (
+          <Register onRegister={handleLogin} onNavigate={navigate} />
+        )}
+
+        {route === 'modules' && (
+          <Modules onNavigate={navigate} user={user} />
+        )}
+
+        {route === 'quiz' && (
+          <Quiz quizConfig={quizConfig} onNavigate={navigate} />
+        )}
+      </main>
+
+      <footer className="App-footer">C++ ITS Template — simple educational template</footer>
     </div>
   );
 }
