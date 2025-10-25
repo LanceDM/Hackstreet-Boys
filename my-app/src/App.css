@@ -32,9 +32,11 @@ body{
   background:rgba(255,255,255,0.02);
   border-bottom:1px solid rgba(255,255,255,0.03);
 }
+
 .brand{
   background:none;border:0;color:var(--text);font-size:18px;font-weight:600;cursor:pointer
 }
+
 .nav-right{display:flex;gap:8px;align-items:center}
 .nav-link{background:transparent;border:0;color:var(--muted);cursor:pointer;padding:6px 8px}
 .nav-user{color:var(--accent);margin-right:8px}

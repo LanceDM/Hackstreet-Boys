@@ -26,3 +26,4 @@ export default function Navbar({ onNavigate, user, onLogout }) {
     </header>
   );
 }
+
