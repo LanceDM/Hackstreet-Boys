@@ -15,6 +15,42 @@ const SAMPLE_QUESTIONS = {
       answer: 2,
     },
   ],
+  pointers: [
+    {
+      id: 'p1',
+      text: 'What does the * operator do when applied to a pointer variable in C++?',
+      options: ['Declare a pointer', 'Dereference the pointer (access pointed value)', 'Multiply two values', 'Address-of operator'],
+      answer: 1,
+      hint: 'Think about how you access the value a pointer points to.',
+      explanation: 'The * operator dereferences a pointer, giving access to the value stored at the address. The & operator is the address-of operator.'
+    },
+    {
+      id: 'p2',
+      text: 'How do you obtain the address of a variable x?',
+      options: ['*x', '&x', 'x&', 'addr(x)'],
+      answer: 1,
+      hint: 'It is the opposite of dereferencing.',
+      explanation: 'Using &x returns the memory address of variable x. This can be assigned to a pointer of a matching type.'
+    },
+  ],
+  recursion: [
+    {
+      id: 'r1',
+      text: 'Which property is essential for a recursive function to terminate?',
+      options: ['Global variables', 'Base case', 'Static variables', 'Operator overloading'],
+      answer: 1,
+      hint: 'Without this, recursion would continue indefinitely.',
+      explanation: 'A base case stops further recursive calls. Each recursive step should move toward the base case.'
+    },
+    {
+      id: 'r2',
+      text: 'What is the output of a recursive factorial function factorial(3) assuming factorial(0) = 1?',
+      options: ['6', '3', '9', 'Undefined'],
+      answer: 0,
+      hint: '3! = 3*2*1',
+      explanation: 'factorial(3) = 3 * 2 * 1 = 6. A typical recursive implementation multiplies n by factorial(n-1) until 0.'
+    },
+  ],
   vars: [
     {
       id: 'q1',
@@ -33,6 +69,8 @@ export default function Quiz({ quizConfig, onNavigate }) {
   const [index, setIndex] = useState(0);
   const [selected, setSelected] = useState(null);
   const [score, setScore] = useState(null);
+  const [showHint, setShowHint] = useState(false);
+  const [showExplanation, setShowExplanation] = useState(false);
 
   const submitAnswer = () => {
     if (selected === null) return;
@@ -42,14 +80,16 @@ export default function Quiz({ quizConfig, onNavigate }) {
     } else {
       setScore((s) => (s === null ? 0 : s));
     }
+    // Reveal explanation for this question; user will click Next to continue
+    setShowExplanation(true);
+  };
 
-    if (index + 1 < questions.length) {
-      setIndex(index + 1);
-      setSelected(null);
-    } else {
-      // finished
-      setIndex(index + 1);
-    }
+  const nextQuestion = () => {
+    const next = index + 1;
+    setSelected(null);
+    setShowHint(false);
+    setShowExplanation(false);
+    setIndex(next);
   };
 
   return (
@@ -69,8 +109,20 @@ export default function Quiz({ quizConfig, onNavigate }) {
           </ul>
 
           <div className="form-actions">
-            <button className="btn" onClick={submitAnswer} disabled={selected === null}>Submit</button>
-            <button className="btn btn-link" onClick={() => onNavigate('modules')}>Cancel</button>
+            {!showExplanation ? (
+              <>
+                <button className="btn" onClick={submitAnswer} disabled={selected === null}>Submit</button>
+                <button className="btn btn-ghost" onClick={() => setShowHint((s) => !s)}>Hint</button>
+                <button className="btn btn-link" onClick={() => onNavigate('modules')}>Cancel</button>
+              </>
+            ) : (
+              <>
+                <div className="muted">{questions[index].explanation || 'No explanation provided.'}</div>
+                <div className="form-actions">
+                  <button className="btn" onClick={nextQuestion}>Next</button>
+                </div>
+              </>
+            )}
           </div>
         </div>
       ) : (
@@ -81,6 +133,13 @@ export default function Quiz({ quizConfig, onNavigate }) {
             <button className="btn" onClick={() => { setIndex(0); setSelected(null); setScore(null); }}>Retry</button>
             <button className="btn btn-outline" onClick={() => onNavigate('modules')}>Back to modules</button>
           </div>
+        </div>
+      )}
+      {/* Show hint if requested */}
+      {showHint && index < questions.length && (
+        <div className="page page-quiz">
+          <strong>Hint:</strong>
+          <p className="muted">{questions[index].hint || 'No hint available.'} <a href="https://www.w3schools.com/cpp/" target="_blank" rel="noreferrer">W3Schools C++</a></p>
         </div>
       )}
     </section>

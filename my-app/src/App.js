@@ -6,6 +6,7 @@ import Login from './pages/Login';
 import Register from './pages/Register';
 import Modules from './pages/Modules';
 import Quiz from './pages/Quiz';
+import Lesson from './pages/Lesson';
 import Navbar from './components/Navbar';
 
 function App() {
@@ -48,6 +49,10 @@ function App() {
 
         {route === 'modules' && (
           <Modules onNavigate={navigate} user={user} />
+        )}
+
+        {route === 'lesson' && (
+          <Lesson quizConfig={quizConfig} onNavigate={navigate} />
         )}
 
         {route === 'quiz' && (

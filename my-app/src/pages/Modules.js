@@ -1,10 +1,8 @@
 import React from 'react';
 
 const SAMPLE_MODULES = [
-  { id: 'intro', title: 'Introduction to C++', description: 'Syntax, compilation, first program, I/O' },
-  { id: 'vars', title: 'Variables & Types', description: 'Primitive types, variables, scope' },
-  { id: 'control', title: 'Control Flow', description: 'if, switch, loops' },
-  { id: 'functions', title: 'Functions', description: 'Declarations, definitions, pass by value/reference' },
+  { id: 'pointers', title: 'Pointers', description: 'Addresses, dereferencing, pointer arithmetic' },
+  { id: 'recursion', title: 'Recursion', description: 'Recursive functions, base cases, examples' },
 ];
 
 export default function Modules({ onNavigate, user }) {
@@ -21,7 +19,7 @@ export default function Modules({ onNavigate, user }) {
             <p>{m.description}</p>
             <div className="module-actions">
               <button className="btn btn-outline" onClick={() => onNavigate('quiz', { moduleId: m.id, title: m.title })}>Take quiz</button>
-              <button className="btn" onClick={() => alert('Open lesson content (not implemented)')}>Open lesson</button>
+              <button className="btn" onClick={() => onNavigate('lesson', { moduleId: m.id })}>Open lesson</button>
             </div>
           </article>
         ))}
