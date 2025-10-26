@@ -1,29 +1,29 @@
-import React from 'react';
+import React from "react";
+import styles from "./Modules.module.css";
+import looping from "./Modules/looping"; // import module descriptors
 
-const SAMPLE_MODULES = [
-  { id: 'pointers', title: 'Pointers', description: 'Addresses, dereferencing, pointer arithmetic' },
-  { id: 'recursion', title: 'Recursion', description: 'Recursive functions, base cases, examples' },
+// Only include title & pdfUrl
+const moduleList = [
+  { title: looping.title, pdfUrl: looping.pdfUrl },
+  // add more modules here
 ];
 
-export default function Modules({ onNavigate, user }) {
+export default function Modules({ onNavigate }) {
   return (
-    <section className="page page-modules">
-      <h2>Modules</h2>
+    <div className={styles.container}>
+      <h1 className={styles.heading}>List of Modules</h1>
 
-      <p className="muted">{user ? `Signed in as ${user.username}` : 'Sign in to track progress'}</p>
-
-      <div className="module-list">
-        {SAMPLE_MODULES.map((m) => (
-          <article key={m.id} className="module-card">
-            <h3>{m.title}</h3>
-            <p>{m.description}</p>
-            <div className="module-actions">
-              <button className="btn btn-outline" onClick={() => onNavigate('quiz', { moduleId: m.id, title: m.title })}>Take quiz</button>
-              <button className="btn" onClick={() => onNavigate('lesson', { moduleId: m.id })}>Open lesson</button>
-            </div>
-          </article>
+      <ul className={styles.moduleList}>
+        {moduleList.map((mod, index) => (
+          <li
+            key={index}
+            className={styles.moduleLink}
+            onClick={() => onNavigate("module", { module: mod })} // navigate to builder
+          >
+            {mod.title}
+          </li>
         ))}
-      </div>
-    </section>
+      </ul>
+    </div>
   );
 }

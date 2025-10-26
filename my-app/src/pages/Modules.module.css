@@ -1,0 +1,30 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 60px;
+}
+
+.heading {
+  margin-bottom: 24px;
+  text-align: center;
+}
+
+.moduleList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.moduleLink {
+  cursor: pointer;
+  color: white;
+  margin-bottom: 12px;
+  font-size: 1.1rem;
+  transition: color 0.2s, text-decoration 0.2s;
+}
+
+.moduleLink:hover {
+  color: #1e90ff;
+  text-decoration: underline;
+}

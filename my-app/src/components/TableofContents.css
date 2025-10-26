@@ -1,0 +1,70 @@
+.table-of-contents {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  width: 250px;
+  background-color: #080f29;
+  border-right: 1px solid white;
+  overflow: visible;                 /* allow toggle to show */
+  transition: transform 0.3s ease;   /* slide TOC in/out */
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  transform: translateX(-250px);      /* fully hidden offscreen */
+}
+
+/* Open state */
+.table-of-contents.open {
+  transform: translateX(0);          /* fully visible */
+}
+
+/* Toggle button sticks to TOC edge */
+.table-of-contents .toggle-button {
+  position: absolute;
+  right: -30px;                       /* outside TOC */
+  top: 50%;
+  transform: translateY(-50%);
+  background-color: white;
+  color: #080f29;
+  border: none;
+  padding: 8px;
+  cursor: pointer;
+  border-radius: 0 4px 4px 0;
+  z-index: 1100;
+}
+
+/* Content inside TOC */
+.table-of-contents .content {
+  padding: 20px;
+  overflow-y: auto;
+  flex: 1;
+}
+
+/* Optional: hide heading and list if you want when closed */
+.table-of-contents.closed .content h2,
+.table-of-contents.closed .content ul {
+  display: none;
+}
+
+.table-of-contents h2 {
+  margin-bottom: 20px;
+  color: white;
+  font-size: 1.2rem;
+}
+
+.table-of-contents ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.table-of-contents li {
+  padding: 8px 0;
+  cursor: pointer;
+  color: white;
+}
+
+.table-of-contents li:hover {
+  color: #007bff;
+}
