@@ -17,12 +17,12 @@
   top: 0;
   left: 0;
   right: 0;
-  background: #080f29;
+  background: #1e273f;
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 12px 20px;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.08);
+  box-shadow: 0 2px 4px rgba(18, 16, 48, 0.08);
   transform: translateY(calc(-100% + 8px));
   transition: transform 220ms ease, box-shadow 220ms ease;
   will-change: transform;
