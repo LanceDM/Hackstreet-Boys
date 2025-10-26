@@ -8,6 +8,8 @@ import Modules from './pages/Modules';
 import Quiz from './pages/Quiz';
 import Lesson from './pages/Lesson';
 import Navbar from './components/Navbar';
+import PoseMonitor from './components/CameraComponents/PoseMonitor';
+import CameraPreview from './components/CameraComponents/CameraPreview';
 
 function App() {
   // simple client-side routing using state to avoid extra dependencies
@@ -58,6 +60,11 @@ function App() {
         {route === 'quiz' && (
           <Quiz quizConfig={quizConfig} onNavigate={navigate} />
         )}
+        
+        <CameraPreview />
+        {/*Do not remove comment. PoseMonitor still non-functional.*/}
+        {/* <PoseMonitor /> */}
+        
       </main>
 
       <footer className="App-footer">C++ ITS Template — simple educational template</footer>
