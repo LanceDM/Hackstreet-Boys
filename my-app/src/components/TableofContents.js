@@ -1,7 +1,7 @@
 import React from 'react';
 import './TableofContents.css';
 
-function TableofContents({ isOpen, onToggle, items = [] }) {
+function TableofContents({ isOpen, onToggle, items = [], onSelect }) {
   return (
     <div className={`table-of-contents ${isOpen ? 'open' : 'closed'}`}>
       {/* Toggle Button: always visible */}
@@ -15,7 +15,18 @@ function TableofContents({ isOpen, onToggle, items = [] }) {
         {isOpen && (
           <ul>
             {items.length > 0
-              ? items.map((it, idx) => <li key={idx}>{it}</li>)
+              ? items.map((it, idx) => (
+                  <li
+                    key={idx}
+                    role="button"
+                    tabIndex={0}
+                    onClick={() => onSelect && onSelect(it)}
+                    onKeyDown={(e) => { if (e.key === 'Enter') onSelect && onSelect(it); }}
+                    style={{ cursor: onSelect ? 'pointer' : 'default' }}
+                  >
+                    {it}
+                  </li>
+                ))
               : (
                 <>
                   <li>Introduction to Loops</li>

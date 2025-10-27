@@ -7,9 +7,7 @@ import './ModuleBuilder.css';
 export default function ModuleBuilder({ module, onNavigate, user }) {
   const [isTocOpen, setIsTocOpen] = useState(true);
 
-  const { title = 'Untitled Module', pdfUrl = '' } = module || {};
-  const initialCode = '';
-  const tocItems = [];
+  const { title = 'Untitled Module', pdfUrl = '', initialCode = '', tocItems = [] } = module || {};
 
   const handleRunCode = async ({ code, input }) => {
     try {
@@ -33,6 +31,12 @@ export default function ModuleBuilder({ module, onNavigate, user }) {
         isOpen={isTocOpen}
         onToggle={() => setIsTocOpen(!isTocOpen)}
         items={tocItems}
+        onSelect={(item) => {
+          // Simple behavior: scroll main content to top and optionally show an alert or highlight.
+          // For now we'll just scroll the main content area into view so student can read the section.
+          const main = document.querySelector('.module-builder');
+          if (main) main.scrollIntoView({ behavior: 'smooth' });
+        }}
       />
 
       {/* Main Module Content */}
