@@ -54,8 +54,6 @@ function App() {
         {/* PoseMonitor still non-functional */}
         {/* <PoseMonitor /> */}
       </main>
-
-      <footer className="App-footer">C++ ITS Template — simple educational template</footer>
     </div>
   );
 }

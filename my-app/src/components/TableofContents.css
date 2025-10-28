@@ -4,14 +4,13 @@
   left: 0;
   height: 100vh;
   width: 250px;
-  background-color: #080f29;
-  border-right: 1px solid white;
-  overflow: visible;                 /* allow toggle to show */
-  transition: transform 0.3s ease;   /* slide TOC in/out */
-  z-index: 1000;
+  background-color: #1e273f;
+  overflow: visible;                 
+  transition: transform 0.3s ease;   
   display: flex;
+  z-index: 1;
   flex-direction: column;
-  transform: translateX(-250px);      /* fully hidden offscreen */
+  transform: translateX(-250px);      
 }
 
 /* Open state */
@@ -22,13 +21,13 @@
 /* Toggle button sticks to TOC edge */
 .table-of-contents .toggle-button {
   position: absolute;
-  right: -30px;                       /* outside TOC */
+  right: -30px;                      
   top: 50%;
   transform: translateY(-50%);
-  background-color: white;
-  color: #080f29;
+  background-color: #1e273f;
+  color: white;
   border: none;
-  padding: 8px;
+  padding: 10px;
   cursor: pointer;
   border-radius: 0 4px 4px 0;
   z-index: 1100;

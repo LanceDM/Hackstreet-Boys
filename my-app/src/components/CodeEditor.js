@@ -8,30 +8,26 @@ function CodeEditor({ onSubmit, initialCode }) {
   const [loading, setLoading] = useState(false);
   const [MonacoComponent, setMonacoComponent] = useState(null);
   const [monacoError, setMonacoError] = useState(null);
-  const [editorLib, setEditorLib] = useState(null); // 'monaco-react' | 'react-monaco-editor'
+  const [editorLib, setEditorLib] = useState(null);
 
   useEffect(() => {
     let mounted = true;
-    // Try the modern maintained package first, then fall back to the older one.
-    // If neither is available we'll keep monacoError set and render the textarea fallback.
     (async () => {
       try {
         const mod = await import('@monaco-editor/react');
         if (!mounted) return;
-        const Comp = mod && (mod.default || null);
+        const Comp = mod.default || null;
         if (Comp) {
           setMonacoComponent(() => Comp);
           setEditorLib('monaco-react');
           return;
         }
-      } catch (e) {
-        // ignore and try the older package
-      }
+      } catch (e) {}
 
       try {
         const mod2 = await import('react-monaco-editor');
         if (!mounted) return;
-        const Comp2 = mod2 && (mod2.default || mod2.MonacoEditor || null);
+        const Comp2 = mod2.default || mod2.MonacoEditor || null;
         if (Comp2) {
           setMonacoComponent(() => Comp2);
           setEditorLib('react-monaco-editor');
@@ -39,8 +35,7 @@ function CodeEditor({ onSubmit, initialCode }) {
         }
       } catch (err) {
         console.error('Failed to load any monaco editor package:', err);
-        if (!mounted) return;
-        setMonacoError(err);
+        if (mounted) setMonacoError(err);
       }
     })();
 
@@ -54,68 +49,92 @@ function CodeEditor({ onSubmit, initialCode }) {
       setOutput(result.output || result.stdout || "");
     } catch (err) {
       setOutput("Error: " + err.message);
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
   };
 
   return (
-    <div style={{ display: "flex", flexDirection: "column", height: "100%" }}>
-      {MonacoComponent && !monacoError ? (
-        // Two libraries expose slightly different props/signatures. Handle both.
-        editorLib === 'monaco-react' ? (
-          <MonacoComponent
-            height="300px"
-            language="cpp"
-            theme="vs-dark"
-            value={code}
-            options={{ automaticLayout: true }}
-            onChange={(val) => setCode(val || '')}
-          />
+    <div
+      className="code-container"
+      style={{
+        display: 'flex',
+        flexDirection: 'column',
+        height: '100%',           // Critical: take full height of parent
+      }}
+    >
+      {/* ===== EDITOR: fills all remaining space ===== */}
+      <div style={{ flex: 1, minHeight: 0, position: 'relative' }}>
+        {MonacoComponent && !monacoError ? (
+          editorLib === 'monaco-react' ? (
+            <MonacoComponent
+              language="cpp"
+              theme="vs-dark"
+              value={code}
+              options={{ automaticLayout: true }}
+              onChange={(val) => setCode(val ?? '')}
+            />
+          ) : (
+            <MonacoComponent
+              language="cpp"
+              theme="vs-dark"
+              value={code}
+              options={{ automaticLayout: true }}
+              onChange={setCode}
+            />
+          )
         ) : (
-          <MonacoComponent
-            height="300px"
-            language="cpp"
-            theme="vs-dark"
+          <textarea
+            style={{
+              width: '100%',
+              height: '100%',
+              fontFamily: 'monospace',
+              fontSize: 14,
+              resize: 'none',
+              border: 'none',
+              outline: 'none',
+              padding: 8,
+              backgroundColor: '#1e1e1e',
+              color: '#d4d4d4',
+            }}
             value={code}
-            options={{ automaticLayout: true }}
-            onChange={(newCode) => setCode(newCode)}
+            onChange={(e) => setCode(e.target.value)}
           />
-        )
-      ) : (
-        // Fallback simple textarea editor when Monaco isn't available
-        <textarea
-          style={{ height: "300px", fontFamily: "monospace", fontSize: 14 }}
-          value={code}
-          onChange={(e) => setCode(e.target.value)}
-        />
-      )}
+        )}
+      </div>
 
-      <textarea
-        placeholder="Standard Input"
-        style={{ marginTop: "10px", height: "60px" }}
-        value={input}
-        onChange={(e) => setInput(e.target.value)}
-      />
-
+      {/* ===== RUN BUTTON ===== */}
       <button
         onClick={handleRun}
         disabled={loading}
-        style={{ marginTop: "10px", padding: "8px 12px" }}
-      >
-        { loading ? "Running…" : "Run Code" }
-      </button>
-
-      <pre
         style={{
-          marginTop: "10px",
-          backgroundColor: "#1e1e1e",
-          color: "#fff",
-          padding: "12px",
-          height: "120px",
-          overflowY: "auto"
+          padding: '10px 16px',
+          fontSize: 14,
+          cursor: loading ? 'not-allowed' : 'pointer',
+          backgroundColor: '#007acc',
+          color: 'white',
+          border: 'none',
         }}
       >
-        { output }
+        {loading ? "Running…" : "Run Code"}
+      </button>
+
+      {/* ===== OUTPUT PANEL: fixed height + scroll ===== */}
+      <pre
+        style={{
+          padding: 12,
+          backgroundColor: '#1e1e1e',
+          color: '#d4d4d4',
+          fontSize: 13,
+          fontFamily: 'monospace',
+          height: 180,                    // Fixed height
+          overflow: 'auto',
+          whiteSpace: 'pre-wrap',
+          wordWrap: 'break-word',
+          margin:"0"
+        }}
+      >
+        {output || 'Output will appear here...'}
       </pre>
     </div>
   );

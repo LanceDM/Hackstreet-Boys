@@ -1,6 +1,5 @@
 import React from "react";
 import styles from "./Modules.module.css";
-import looping from "./Modules/looping"; // import existing module descriptors
 import forloops from "./Modules/forloops";
 import whileloop from "./Modules/whileloop";
 import dowhile from "./Modules/dowhile";
@@ -9,7 +8,6 @@ import controlstatements from "./Modules/controlstatements";
 
 // Only include title & pdfUrl
 const moduleList = [
-  { title: looping.title, pdfUrl: looping.pdfUrl, ...looping },
   { title: forloops.title, pdfUrl: forloops.pdfUrl, ...forloops },
   { title: whileloop.title, pdfUrl: whileloop.pdfUrl, ...whileloop },
   { title: dowhile.title, pdfUrl: dowhile.pdfUrl, ...dowhile },

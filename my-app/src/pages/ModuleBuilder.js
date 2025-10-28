@@ -5,7 +5,7 @@ import CodeEditor from '../components/CodeEditor';
 import './ModuleBuilder.css';
 
 export default function ModuleBuilder({ module, onNavigate, user }) {
-  const [isTocOpen, setIsTocOpen] = useState(true);
+  const [isTocOpen, setIsTocOpen] = useState(false);
 
   const { title = 'Untitled Module', pdfUrl = '', initialCode = '', tocItems = [] } = module || {};
 
@@ -40,9 +40,8 @@ export default function ModuleBuilder({ module, onNavigate, user }) {
       />
 
       {/* Main Module Content */}
-      <main
+      <div
         className="module-builder"
-        style={{ marginLeft: isTocOpen ? 250 : 50 }} // shift content based on TOC
       >
         {/* Top Bar */}
         <div className="top-bar">
@@ -57,6 +56,7 @@ export default function ModuleBuilder({ module, onNavigate, user }) {
 
         {/* Main Content */}
         <div className="main-content">
+          
           <div className="content-area">
             {/* PDF */}
             <div className={`pdf-container ${pdfUrl ? '' : 'pdf-placeholder'}`}>
@@ -64,14 +64,15 @@ export default function ModuleBuilder({ module, onNavigate, user }) {
             </div>
 
             {/* Code Editor */}
-            <div className="code-container">
-              <div className="code-editor-wrapper">
-                <CodeEditor onSubmit={handleRunCode} initialCode={initialCode} />
+            <div className="code-editor-wrapper">
+              <div className="code-container">
+                  <CodeEditor onSubmit={handleRunCode} initialCode={initialCode} />
               </div>
             </div>
+
           </div>
         </div>
-      </main>
+      </div>
     </>
   );
 
