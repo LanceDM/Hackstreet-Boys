@@ -1,18 +1,11 @@
 import React from 'react';
 import './TableofContents.css';
 
-function TableofContents({ isOpen, onToggle, items = [], onSelect }) {
+function TableofContents({items = [], onSelect }) {
   return (
-    <div className={`table-of-contents ${isOpen ? 'open' : 'closed'}`}>
-      {/* Toggle Button: always visible */}
-      <button className="toggle-button" onClick={onToggle}>
-        {isOpen ? '←' : '→'}
-      </button>
-
-      {/* TOC Content */}
+    <div className={`table-of-contents`}>
       <div className="content">
-        {isOpen && <h2>Table of Contents</h2>}
-        {isOpen && (
+       <h2>Table of Contents</h2>
           <ul>
             {items.length > 0
               ? items.map((it, idx) => (
@@ -38,7 +31,7 @@ function TableofContents({ isOpen, onToggle, items = [], onSelect }) {
                 </>
               )}
           </ul>
-        )}
+ 
       </div>
     </div>
   );

@@ -10,60 +10,34 @@
   display: flex;
   z-index: 1;
   flex-direction: column;
-  transform: translateX(-250px);      
+  transform: translateX(-230px);      
 }
 
-/* Open state */
-.table-of-contents.open {
-  transform: translateX(0);          /* fully visible */
+.table-of-contents:hover {
+  transform: translateX(0);        
 }
 
-/* Toggle button sticks to TOC edge */
-.table-of-contents .toggle-button {
-  position: absolute;
-  right: -30px;                      
-  top: 50%;
-  transform: translateY(-50%);
-  background-color: #1e273f;
-  color: white;
-  border: none;
-  padding: 10px;
-  cursor: pointer;
-  border-radius: 0 4px 4px 0;
-  z-index: 1100;
-}
-
-/* Content inside TOC */
 .table-of-contents .content {
   padding: 20px;
   overflow-y: auto;
   flex: 1;
 }
 
-/* Optional: hide heading and list if you want when closed */
-.table-of-contents.closed .content h2,
-.table-of-contents.closed .content ul {
-  display: none;
-}
-
 .table-of-contents h2 {
-  margin-bottom: 20px;
-  color: white;
+  margin: 0 0 20px 0;
+  color: #fff;
   font-size: 1.2rem;
 }
-
 .table-of-contents ul {
   list-style: none;
   padding: 0;
   margin: 0;
 }
-
 .table-of-contents li {
   padding: 8px 0;
-  cursor: pointer;
-  color: white;
+  color: #ccc;
+  transition: color 0.2s ease;
 }
-
 .table-of-contents li:hover {
   color: #007bff;
 }
