@@ -1,14 +1,13 @@
-.module-builder {
+.quiz-builder {
   display: flex;
   flex-direction: column;
   height: 90vh;
-  width: 90vw;
+  width: 80vw;
   position: absolute;
   top: 50%;
-  left: 50%;
+  left: calc(50% + 125px); /* shifts it right by half of the TOC width */
   transform: translate(-50%, -50%);
 }
-
 /* Top Bar */
 .top-bar {
   display: flex;
@@ -48,29 +47,27 @@
   flex:1;
 }
 
-/* PDF Container */
-.pdf-container {
+.problem-section {
   min-width: 0;
   overflow: hidden;
-  background-color: white;
-  flex:4;
+  flex:3;
 }
 
-/* PDF placeholder when empty */
 .pdf-container.pdf-placeholder {
   background: #f9f9f9;
 }
 
-/* Code Editor */
-/* Code Editor – fills the space it is given */
+
 .code-container {
   flex-direction: column;     
   height: 100%;  
+
 }
 
 .code-editor-wrapper{
   overflow: hidden;     
   flex: 3;
   height: 100%;  
+  margin-top: 30px;
   border: 1px solid #ddd;
 }

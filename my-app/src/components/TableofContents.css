@@ -4,7 +4,7 @@
   left: 0;
   height: 100vh;
   width: 250px;
-  background-color: #1e273f;
+  background: linear-gradient(to top, #1e273f 50%, #0f1724);
   overflow: visible;                 
   transition: transform 0.3s ease;   
   display: flex;
@@ -13,11 +13,20 @@
   transform: translateX(-230px);      
 }
 
+.table-of-contents.fixed {
+  transform: none ;
+  transition: none;
+  left: 0;
+  position: fixed; /* or fixed, depending on your layout */
+}
+
+
 .table-of-contents:hover {
   transform: translateX(0);        
 }
 
 .table-of-contents .content {
+  margin-top: 70px;
   padding: 20px;
   overflow-y: auto;
   flex: 1;
@@ -41,3 +50,4 @@
 .table-of-contents li:hover {
   color: #007bff;
 }
+

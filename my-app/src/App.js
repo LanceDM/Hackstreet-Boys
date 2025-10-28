@@ -7,23 +7,25 @@ import Register from './pages/Register';
 import Modules from './pages/Modules';
 import ModuleBuilder from './pages/ModuleBuilder';
 import Quiz from './pages/Quiz';
+import QuizBuilder from './pages/QuizBuilder';
 import Lesson from './pages/Lesson';
 import Navbar from './components/Navbar';
 import PoseMonitor from './components/CameraComponents/PoseMonitor';
 import CameraPreview from './components/CameraComponents/CameraPreview';
 
 function App() {
-  // simple client-side routing using state
-  const [route, setRoute] = useState('home'); // 'home' | 'login' | 'register' | 'modules' | 'module' | 'quiz'
+  const [route, setRoute] = useState('home');
   const [user, setUser] = useState(null);
-  const [moduleData, setModuleData] = useState(null); // store selected module descriptor
+  const [moduleData, setModuleData] = useState(null);
   const [quizConfig, setQuizConfig] = useState(null);
 
-  const navigate = (to, opts) => {
-    if (to === 'module' && opts?.module) {
-      setModuleData(opts.module); // save selected module
+  const navigate = (to, opts = {}) => {
+    if (to === 'module' && opts.module) {
+      setModuleData(opts.module);
     }
-    if (opts && to !== 'module') setQuizConfig(opts);
+    if (opts && to !== 'module') {
+      setQuizConfig(opts);
+    }
     setRoute(to);
   };
 
@@ -49,6 +51,7 @@ function App() {
         {route === 'module' && <ModuleBuilder module={moduleData} onNavigate={navigate} user={user} />}
         {route === 'lesson' && <Lesson quizConfig={quizConfig} onNavigate={navigate} />}
         {route === 'quiz' && <Quiz quizConfig={quizConfig} onNavigate={navigate} />}
+        {route === 'quiz-builder' && <QuizBuilder quizConfig={quizConfig} onNavigate={navigate} />}
 
         <CameraPreview />
         {/* PoseMonitor still non-functional */}

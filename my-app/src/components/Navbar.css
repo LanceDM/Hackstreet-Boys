@@ -1,7 +1,4 @@
-/* Navbar hide-and-pop behavior
-   - The visible 8px strip at the top captures hover/focus.
-   - When the container is hovered or focused, the .nav slides down into view.
-*/
+
 
 .nav-strip-container {
   position: fixed;
@@ -9,7 +6,7 @@
   left: 0;
   right: 0;
   height: 8px; /* visible hover area */
-  z-index: 1000;
+  z-index: 1001;
 }
 
 .nav {
@@ -17,24 +14,18 @@
   top: 0;
   left: 0;
   right: 0;
-  background: linear-gradient(to top, #1e273f, #0f1724 );
+  background: linear-gradient(to top, #1e273f, #0f1724);
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 12px 20px;
   box-shadow: 0 2px 4px rgba(18, 16, 48, 0.08);
-  transform: translateY(calc(-100% + 8px));
   transition: transform 220ms ease, box-shadow 220ms ease;
   will-change: transform;
   z-index: 1001;
 }
 
-/* Expand when the user hovers or focuses the top strip or the nav itself */
-.nav-strip-container:hover .nav,
-.nav-strip-container:focus-within .nav,
-.nav:hover {
-  transform: translateY(0);
-}
+
 
 /* A small visible hint bar so users can discover the hover area */
 .nav-strip-container::before {
