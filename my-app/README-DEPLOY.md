@@ -1,14 +1,29 @@
 # Deployment Guide for Render
 
+## ⚠️ IMPORTANT: Root Directory Setting
+
+**The most common issue is forgetting to set the Root Directory!**
+
+When creating your service in Render:
+1. Go to **Settings** → **General**
+2. Find **"Root Directory"** field
+3. Set it to: `my-app` (for frontend) or `Backend-PostgreLocal/PostgreLocal` (for backend)
+4. **Save** and redeploy
+
 ## Frontend Setup (React App)
 
-1. **Create a new Web Service on Render:**
+1. **Create a new Static Site on Render (Recommended):**
    - Connect your GitHub repository
-   - Root Directory: `my-app`
+   - **Root Directory:** `my-app` (IMPORTANT: Set this in Render settings)
+   - Build Command: `npm install && npm run build`
+   - Publish Directory: `build`
+
+   **OR create a Web Service:**
+   - Connect your GitHub repository
+   - **Root Directory:** `my-app` (IMPORTANT: Set this in Render settings)
    - Environment: `Node`
    - Build Command: `npm install && npm run build`
    - Start Command: `npx serve -s build -l 10000`
-   - Or use Static Site with Publish Directory: `build`
 
 2. **Set Environment Variable:**
    - Go to your Render service settings → Environment
