@@ -65,6 +65,11 @@ REST_FRAMEWORK = {
 
 CORS_ALLOW_ALL_ORIGINS = True
 
+# link to front end 
+CORS_ALLOWED_ORIGINS = [
+    "https://hackstreet-boys-1-8e10.onrender.com/", 
+]
+
 ROOT_URLCONF = 'PostgreLocal.urls'
 
 TEMPLATES = [
