@@ -1,24 +1,24 @@
 services:
-  # Frontend React App
-  - type: web
+  # Frontend React App (Static Site)
+  - type: static
     name: hackstreet-boys-frontend
-    env: node
     rootDir: my-app
-    plan: free
-    buildCommand: cd my-app && npm install && npm run build
-    startCommand: cd my-app && npx serve -s build -l $PORT
+    buildCommand: npm install && npm run build
+    staticPublishPath: ./build
     envVars:
       - key: REACT_APP_API_URL
         sync: false  # Set this manually in Render dashboard to your backend URL
-    staticPublishPath: ./my-app/build
 
   # Backend Django API
   - type: web
     name: hackstreet-boys-backend
     env: python
     rootDir: Backend-PostgreLocal/PostgreLocal
-    buildCommand: pip install -r ../../requirements.txt
-    startCommand: python manage.py migrate && gunicorn PostgreLocal.wsgi:application
+    buildCommand: | 
+      pip install -r ../../requirements.txt
+      python manage.py migrate
+      python manage.py collectstatic --noinput
+    startCommand: gunicorn PostgreLocal.wsgi:application --bind 0.0.0.0:$PORT
     envVars:
       - key: DEBUG
         value: False
