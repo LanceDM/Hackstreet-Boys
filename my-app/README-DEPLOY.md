@@ -1,14 +1,22 @@
 # Deployment Guide for Render
 
-## ⚠️ IMPORTANT: Root Directory Setting
+## ⚠️ CRITICAL: Root Directory Setting
 
-**The most common issue is forgetting to set the Root Directory!**
+**The most common error is: "Couldn't find package.json"**
 
-When creating your service in Render:
-1. Go to **Settings** → **General**
-2. Find **"Root Directory"** field
-3. Set it to: `my-app` (for frontend) or `Backend-PostgreLocal/PostgreLocal` (for backend)
-4. **Save** and redeploy
+### How to Fix:
+
+1. **Go to your Render service dashboard**
+2. **Click Settings** (left sidebar)
+3. **Scroll to "Build & Deploy" section**
+4. **Find "Root Directory" field**
+5. **Set it to EXACTLY:** `my-app` 
+   - ❌ NOT: `/my-app` or `my-app/` or `src` or empty
+   - ✅ YES: `my-app`
+6. **Click "Save Changes" at the bottom**
+7. **Go to "Manual Deploy" → "Deploy latest commit"**
+
+**If you still get errors, see `RENDER-FIX.md` for detailed troubleshooting.**
 
 ## Frontend Setup (React App)
 
