@@ -25,17 +25,24 @@ export default function Register({ onRegister, onNavigate }) {
 
     try {
       const response = await PostUser(username, firstName, lastName, password);
-      // Store user in session
+      console.log('Registration response:', response);
+      
+      // Store user in session - use response data directly
       const sessionUser = {
-        id: response.id || Date.now(),
-        username: response.username || username,
-        full_name: response.full_name || `${firstName} ${lastName}`,
-        role: response.role || 'student'
+        id: response?.id ?? null,
+        username: response?.username ?? username,
+        full_name: response?.full_name ?? `${firstName} ${lastName}`,
+        role: response?.role ?? 'student'
       };
       UserSession.setUser(sessionUser);
       onRegister(sessionUser);
     } catch (error) {
-      setError(error.response?.data?.message || 'Failed to create account. Please try again.');
+      console.error('Registration error:', error);
+      const errorMessage = error.response?.data?.message || 
+                          (typeof error.response?.data === 'object' ? JSON.stringify(error.response.data) : null) ||
+                          error.message || 
+                          'Failed to create account. Please try again.';
+      setError(errorMessage);
     }
   };
 
