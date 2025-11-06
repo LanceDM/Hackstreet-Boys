@@ -18,34 +18,41 @@
 
 **If you still get errors, see `RENDER-FIX.md` for detailed troubleshooting.**
 
-## Frontend Setup (React App)
+## Frontend Setup (React App) - FREE PLAN
 
-1. **Create a new Static Site on Render (Recommended):**
+**Use Static Site (FREE, unlimited on free plan):**
+
+1. **Create a new Static Site:**
+   - Go to Render Dashboard → New → Static Site
    - Connect your GitHub repository
    - **Root Directory:** `my-app` (IMPORTANT: Set this in Render settings)
    - Build Command: `npm install && npm run build`
    - Publish Directory: `build`
-
-   **OR create a Web Service:**
-   - Connect your GitHub repository
-   - **Root Directory:** `my-app` (IMPORTANT: Set this in Render settings)
-   - Environment: `Node`
-   - Build Command: `npm install && npm run build`
-   - Start Command: `npx serve -s build -l 10000`
+   - Click "Create Static Site"
 
 2. **Set Environment Variable:**
-   - Go to your Render service settings → Environment
+   - After creation, go to Settings → Environment
    - Add environment variable:
      - Key: `REACT_APP_API_URL`
      - Value: `https://your-backend-service.onrender.com` (replace with your actual backend URL)
 
-## Backend Setup (Django)
+## Backend Setup (Django) - FREE PLAN
 
-1. **Create a new Web Service on Render:**
-   - Root Directory: `Backend-PostgreLocal/PostgreLocal`
-   - Environment: `Python 3`
-   - Build Command: `pip install -r ../../requirements.txt`
-   - Start Command: `python manage.py migrate && gunicorn PostgreLocal.wsgi:application`
+**Use Web Service (uses your 1 free service):**
+
+1. **Create a new Web Service:**
+   - Go to Render Dashboard → New → Web Service
+   - Connect your GitHub repository
+   - **Root Directory:** `Backend-PostgreLocal/PostgreLocal` (IMPORTANT!)
+   - **Environment:** Select `Python 3` from dropdown
+   - Build Command: 
+     ```
+     pip install -r ../../requirements.txt
+     python manage.py migrate
+     python manage.py collectstatic --noinput
+     ```
+   - Start Command: `gunicorn PostgreLocal.wsgi:application --bind 0.0.0.0:$PORT`
+   - Click "Create Web Service"
 
 2. **Set Environment Variables:**
    - `DEBUG=False`
