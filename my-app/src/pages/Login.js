@@ -14,7 +14,7 @@ export default function Login({ onLogin, onNavigate }) {
       setError('Please enter username and password');
       return;
     }
-
+    
     // fake user object — replace with real auth later
     const user = { id: 1, username };
     onLogin(user);

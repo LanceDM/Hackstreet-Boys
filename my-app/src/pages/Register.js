@@ -1,15 +1,19 @@
 import React, { useState } from 'react';
+import PostUser from '../Query/post.js';
 
 export default function Register({ onRegister, onNavigate }) {
   const [username, setUsername] = useState('');
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
   const [password, setPassword] = useState('');
   const [confirm, setConfirm] = useState('');
   const [error, setError] = useState(null);
 
-  const submit = (e) => {
+  const submit = async (e) => {
     e.preventDefault();
     setError(null);
-    if (!username || !password) {
+
+    if (!username || !password || !firstName || !lastName) {
       setError('Please fill all fields');
       return;
     }
@@ -18,9 +22,13 @@ export default function Register({ onRegister, onNavigate }) {
       return;
     }
 
-    // fake registration — replace with backend call
-    const user = { id: Date.now(), username };
-    onRegister(user);
+    try {
+      const response = await PostUser(username, firstName, lastName, password);
+      const user = { id: Date.now(), username, firstName, lastName };
+      onRegister(user);
+    } catch (error) {
+      setError(error.response?.data?.message || 'Failed to create account. Please try again.');
+    }
   };
 
   return (
@@ -30,24 +38,62 @@ export default function Register({ onRegister, onNavigate }) {
       <form onSubmit={submit} className="form form-auth">
         <label>
           Username
-          <input value={username} onChange={(e) => setUsername(e.target.value)} />
+          <input
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+            required
+          />
+        </label>
+
+        <label>
+          First Name
+          <input
+            value={firstName}
+            onChange={(e) => setFirstName(e.target.value)}
+            required
+          />
+        </label>
+
+        <label>
+          Last Name
+          <input
+            value={lastName}
+            onChange={(e) => setLastName(e.target.value)}
+            required
+          />
         </label>
 
         <label>
           Password
-          <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
+          <input
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+          />
         </label>
 
         <label>
           Confirm Password
-          <input type="password" value={confirm} onChange={(e) => setConfirm(e.target.value)} />
+          <input
+            type="password"
+            value={confirm}
+            onChange={(e) => setConfirm(e.target.value)}
+            required
+          />
         </label>
 
         {error && <p className="form-error">{error}</p>}
 
         <div className="form-actions">
           <button type="submit" className="btn">Create account</button>
-          <button type="button" className="btn btn-link" onClick={() => onNavigate('login')}>Sign in instead</button>
+          <button
+            type="button"
+            className="btn btn-link"
+            onClick={() => onNavigate('login')}
+          >
+            Sign in instead
+          </button>
         </div>
       </form>
     </section>
