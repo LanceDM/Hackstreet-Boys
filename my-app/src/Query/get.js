@@ -1,5 +1,6 @@
 import axios from 'axios';
 import UserSession from './UserSession';
+import API_BASE_URL from '../config/api';
 
 // Login: POST /login/
 export default function Login(username, password) {
@@ -8,7 +9,7 @@ export default function Login(username, password) {
     password_hash: password,
   };
 
-  return axios.post("http://localhost:8000/login/", payload, {
+  return axios.post(`${API_BASE_URL}/login/`, payload, {
     headers: {
       'Content-Type': 'application/json',
     },
@@ -29,7 +30,7 @@ export function GetUser(username = null) {
   if (!target) {
     return Promise.reject(new Error('No username provided and no session user available'));
   }
-  return axios.get(`http://localhost:8000/users/${encodeURIComponent(target)}/`)
+  return axios.get(`${API_BASE_URL}/users/${encodeURIComponent(target)}/`)
     .then(response => response.data)
     .catch(error => {
       console.error('GetUser Error:', error.response?.data || error.message);

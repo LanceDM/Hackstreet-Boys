@@ -1,4 +1,5 @@
 import axios from 'axios';
+import API_BASE_URL from '../config/api';
 
 export default function PostUser(username, firstname, lastname, password) {
   const payload = {
@@ -8,7 +9,7 @@ export default function PostUser(username, firstname, lastname, password) {
     role: 'student',
   };
 
-  return axios.post("http://localhost:8000/users/", payload, {
+  return axios.post(`${API_BASE_URL}/users/`, payload, {
     headers: {
       'Content-Type': 'application/json',
     },
