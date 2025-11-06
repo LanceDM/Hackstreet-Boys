@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import PostUser from '../Query/post.js';
+import UserSession from '../Query/UserSession.js';
 
 export default function Register({ onRegister, onNavigate }) {
   const [username, setUsername] = useState('');
@@ -24,8 +25,15 @@ export default function Register({ onRegister, onNavigate }) {
 
     try {
       const response = await PostUser(username, firstName, lastName, password);
-      const user = { id: Date.now(), username, firstName, lastName };
-      onRegister(user);
+      // Store user in session
+      const sessionUser = {
+        id: response.id || Date.now(),
+        username: response.username || username,
+        full_name: response.full_name || `${firstName} ${lastName}`,
+        role: response.role || 'student'
+      };
+      UserSession.setUser(sessionUser);
+      onRegister(sessionUser);
     } catch (error) {
       setError(error.response?.data?.message || 'Failed to create account. Please try again.');
     }

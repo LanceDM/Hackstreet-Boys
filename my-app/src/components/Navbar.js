@@ -19,6 +19,7 @@ export default function Navbar({ onNavigate, user, onLogout }) {
 
           {user ? (
             <>
+              <button className="nav-link" onClick={() => onNavigate('profile')}>Profile</button>
               <span className="nav-user">{user.username}</span>
               <button className="btn btn-ghost" onClick={onLogout}>Sign out</button>
             </>

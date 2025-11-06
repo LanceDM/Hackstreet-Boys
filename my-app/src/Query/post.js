@@ -8,7 +8,7 @@ export default function PostUser(username, firstname, lastname, password) {
     role: 'student',
   };
 
-  return axios.post("http://127.0.0.1:8000/", payload, {
+  return axios.post("http://localhost/", payload, {
     headers: {
       'Content-Type': 'application/json',
     },
