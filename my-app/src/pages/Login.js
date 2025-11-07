@@ -1,23 +1,35 @@
 import React, { useState } from 'react';
+import LoginApi from '../Query/get.js';
+import UserSession from '../Query/UserSession.js';
 
 export default function Login({ onLogin, onNavigate }) {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState(null);
 
-  const submit = (e) => {
+  const submit = async (e) => {
     e.preventDefault();
     setError(null);
 
-    // simple client-side validation and fake auth
     if (!username || !password) {
       setError('Please enter username and password');
       return;
     }
-
-    // fake user object — replace with real auth later
-    const user = { id: 1, username };
-    onLogin(user);
+    
+    try {
+      const userData = await LoginApi(username, password);
+      // Store only required fields in session
+      const sessionUser = {
+        id: userData.id ?? Date.now(),
+        username: userData.username,
+        role: userData.role ?? 'student',
+        full_name: userData.full_name ?? null,
+      };
+      UserSession.setUser(sessionUser);
+      onLogin(sessionUser);
+    } catch (err) {
+      setError(err.response?.data?.message || 'Invalid username or password');
+    }
   };
 
   return (

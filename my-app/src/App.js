@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './App.css';
 
 import Home from './pages/Home';
@@ -11,12 +11,22 @@ import QuizBuilder from './pages/QuizBuilder';
 import Navbar from './components/Navbar';
 import PoseMonitor from './components/CameraComponents/PoseMonitor';
 import CameraPreview from './components/CameraComponents/CameraPreview';
+import UserSession from './Query/UserSession';
+import Profile from './pages/Profile';
 
 function App() {
   const [route, setRoute] = useState('home');
   const [user, setUser] = useState(null);
   const [moduleData, setModuleData] = useState(null);
   const [quizConfig, setQuizConfig] = useState(null);
+
+  // Check for existing session on app load
+  useEffect(() => {
+    const sessionUser = UserSession.getUser();
+    if (sessionUser) {
+      setUser(sessionUser);
+    }
+  }, []);
 
   const navigate = (to, opts = {}) => {
     if (to === 'module' && opts.module) {
@@ -34,6 +44,7 @@ function App() {
   };
 
   const handleLogout = () => {
+    UserSession.clearUser();
     setUser(null);
     setRoute('home');
   };
@@ -50,6 +61,7 @@ function App() {
         {route === 'module' && <ModuleBuilder module={moduleData} onNavigate={navigate} user={user} />}
         {route === 'quiz' && <Quiz quizConfig={quizConfig} onNavigate={navigate} />}
         {route === 'quiz-builder' && <QuizBuilder quizConfig={quizConfig} onNavigate={navigate} />}
+        {route === 'profile' && <Profile onNavigate={navigate} />}
 
         <CameraPreview />
         {/* PoseMonitor still non-functional */}
