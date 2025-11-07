@@ -8,7 +8,6 @@ import Modules from './pages/Modules';
 import ModuleBuilder from './pages/ModuleBuilder';
 import Quiz from './pages/Quiz';
 import QuizBuilder from './pages/QuizBuilder';
-import Lesson from './pages/Lesson';
 import Navbar from './components/Navbar';
 import PoseMonitor from './components/CameraComponents/PoseMonitor';
 import CameraPreview from './components/CameraComponents/CameraPreview';
@@ -49,7 +48,6 @@ function App() {
         {route === 'register' && <Register onRegister={handleLogin} onNavigate={navigate} />}
         {route === 'modules' && <Modules onNavigate={navigate} user={user} />}
         {route === 'module' && <ModuleBuilder module={moduleData} onNavigate={navigate} user={user} />}
-        {route === 'lesson' && <Lesson quizConfig={quizConfig} onNavigate={navigate} />}
         {route === 'quiz' && <Quiz quizConfig={quizConfig} onNavigate={navigate} />}
         {route === 'quiz-builder' && <QuizBuilder quizConfig={quizConfig} onNavigate={navigate} />}
 
