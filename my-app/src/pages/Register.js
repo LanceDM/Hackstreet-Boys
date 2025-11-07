@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import PostUser from '../Query/post.js';
+import PostUser from '../Query/RegisterQuery.js';
 import UserSession from '../Query/UserSession.js';
 
 export default function Register({ onRegister, onNavigate }) {

@@ -11,3 +11,8 @@ class UserSerializer(serializers.ModelSerializer):
             'full_name': {'required': False, 'allow_blank': True, 'allow_null': True},
             'role': {'required': False, 'default': 'student'},
         }
+
+class QuizSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Quiz
+        fields = '__all__'

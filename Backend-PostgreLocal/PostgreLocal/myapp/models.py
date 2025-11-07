@@ -96,7 +96,6 @@ class Quiz(models.Model):
         return f"{self.quiz_difficulty}{self.quiz_number}"
 
 
-
 class UserQuizAttempt(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='quiz_attempts')
     quiz = models.ForeignKey(Quiz, on_delete=models.CASCADE, related_name='attempts')
