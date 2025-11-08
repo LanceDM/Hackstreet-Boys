@@ -16,7 +16,19 @@ export default function Profile({ onNavigate }) {
 
   return (
     <section className="page page-profile">
-      <h2>Profile</h2>
+      {/* ----- Header with right-aligned "Signed in as" ----- */}
+      <div
+        style={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          marginBottom: 24,
+        }}
+      >
+        <h2>Profile</h2>
+      </div>
+
+      {/* ----- Profile card ----- */}
       <div className="profile-card">
         <div><strong>Username:</strong> {user.username}</div>
         <div><strong>Full name:</strong> {user.full_name || '—'}</div>
@@ -24,8 +36,20 @@ export default function Profile({ onNavigate }) {
         <div><strong>ID:</strong> {user.id}</div>
       </div>
 
-      <div style={{ marginTop: 16 }}>
-        <button className="btn" onClick={() => onNavigate('modules')}>Back to Modules</button>
+      {/* ----- Right-aligned button ----- */}
+      <div
+        style={{
+          display: 'flex',
+          justifyContent: 'flex-end',   // aligns children to the right
+          marginTop: 16,
+        }}
+      >
+        <button
+          className="btn"
+          onClick={() => onNavigate('home')}
+        >
+          Back Home
+        </button>
       </div>
     </section>
   );

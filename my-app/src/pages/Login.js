@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import LoginApi from '../Query/get.js';
+import LoginApi from '../Query/LoginQuery.js';
 import UserSession from '../Query/UserSession.js';
 
 export default function Login({ onLogin, onNavigate }) {

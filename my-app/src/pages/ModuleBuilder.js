@@ -47,7 +47,7 @@ export default function ModuleBuilder({ module, onNavigate, user }) {
         <div className="top-bar">
           <h2 className="module-title">{title}</h2>
           <button
-            className="back-button"
+            className="btn"
             onClick={() => onNavigate('modules')}
           >
             Back to Modules

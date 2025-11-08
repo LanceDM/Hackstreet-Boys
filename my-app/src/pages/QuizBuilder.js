@@ -1,55 +1,82 @@
-import React, { useState } from 'react';
-import TableofContents from '../components/TableofContents';
-import CodeEditor from '../components/CodeEditor';
-import allQuizzes from './Quizzes';
-import './QuizBuilder.css';
-import '../App.css';
+import React, { useState, useEffect } from "react";
+import TableofContents from "../components/TableofContents";
+import CodeEditor from "../components/CodeEditor";
+import {
+  loadAllQuizzes,
+  getAllQuizzes,
+  setEditedCode,
+} from "./Quizzes/QuizManager.js";
+
+import "./QuizBuilder.css";
+import "../App.css";
 
 export default function QuizBuilder({ onNavigate, user }) {
   const [isTocOpen, setIsTocOpen] = useState(false);
   const [currentQuizIndex, setCurrentQuizIndex] = useState(0);
-  const [editedCodes, setEditedCodes] = useState({}); // store per-quiz edits
+  const [quizzes, setQuizzes] = useState([]);
 
-  const quiz = allQuizzes[currentQuizIndex];
-  const {
-    id = 'UnknownQuiz',
-    title = 'Untitled Quiz',
-    problemStatement = 'No problem statement provided.',
-    initialCode = '',
-  } = quiz || {};
+  // Fisher–Yates shuffle
+  const shuffleArray = (array) => {
+    const arr = [...array];
+    for (let i = arr.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [arr[i], arr[j]] = [arr[j], arr[i]];
+    }
+    return arr;
+  };
 
-  // Determine what code to show
-  const displayedCode = editedCodes[id] || initialCode;
+  // Load and randomize quizzes
+  useEffect(() => {
+    async function init() {
+      await loadAllQuizzes();
+      const loadedQuizzes = getAllQuizzes();
+      const randomized = shuffleArray(loadedQuizzes);
+      setQuizzes(randomized);
+      // console.log("✅ Quizzes loaded and randomized:", randomized.map(q => q.title || q.id));
+    }
+    init();
+  }, []);
+
+  // Log when the current quiz changes
+  useEffect(() => {
+    if (quizzes.length > 0) {
+      const current = quizzes[currentQuizIndex];
+      // console.log(`📘 Now viewing quiz: [${currentQuizIndex + 1}/${quizzes.length}] ${current.title || current.id}`);
+    }
+  }, [currentQuizIndex, quizzes]);
+
+  const quiz = quizzes[currentQuizIndex];
+  if (!quiz) return <p>Loading quizzes...</p>;
+
+  const displayedCode = quiz.editedCode || quiz.initialCode;
 
   const handleRunCode = async ({ code, input }) => {
     try {
-      const response = await fetch('/api/compile/run', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+      const response = await fetch("/api/compile/run", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ code, input }),
       });
-      if (!response.ok) throw new Error('Failed to run code');
+      if (!response.ok) throw new Error("Failed to run code");
       return await response.json();
     } catch (error) {
-      console.error('Run error:', error);
+      console.error("Run error:", error);
       return { output: `Error: ${error.message}` };
     }
   };
 
   const handleSelectQuiz = (index) => {
     setCurrentQuizIndex(index);
-    const main = document.querySelector('.quiz-builder');
-    main?.scrollIntoView({ behavior: 'smooth' });
+    document.querySelector(".quiz-builder")?.scrollIntoView({ behavior: "smooth" });
   };
 
   const handleCodeChange = (newCode) => {
-    setEditedCodes((prev) => ({
-      ...prev,
-      [id]: newCode,
-    }));
+    const quizId = quiz.id;
+    setEditedCode(quizId, newCode);
+    setQuizzes(getAllQuizzes());
   };
 
-  const tocItems = allQuizzes.map(q => ({
+  const tocItems = quizzes.map((q) => ({
     label: q.title || q.id,
     id: q.id,
   }));
@@ -59,10 +86,10 @@ export default function QuizBuilder({ onNavigate, user }) {
       <TableofContents
         disableTransform
         isOpen={true}
-        onToggle={() => setIsTocOpen(prev => !prev)}
-        items={tocItems.map(item => item.label)}
-        onSelect={(itemLabel) => {
-          const index = tocItems.findIndex(i => i.label === itemLabel);
+        onToggle={() => setIsTocOpen((prev) => !prev)}
+        items={tocItems.map((item) => item.label)}
+        onSelect={(label) => {
+          const index = tocItems.findIndex((i) => i.label === label);
           if (index !== -1) handleSelectQuiz(index);
         }}
       />
@@ -72,10 +99,10 @@ export default function QuizBuilder({ onNavigate, user }) {
           <div className="content-area">
             <section className="problem-section">
               <header className="top-bar">
-                <h2 className="Quiz-title">{title}</h2>
+                <h2 className="Quiz-title">{quiz.title}</h2>
               </header>
               <h3>Problem Statement</h3>
-              <p className="problem-text">{problemStatement}</p>
+              <p className="problem-text">{quiz.problemStatement}</p>
             </section>
 
             <section className="code-editor-wrapper">

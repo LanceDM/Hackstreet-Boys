@@ -20,7 +20,7 @@ function App() {
   const [moduleData, setModuleData] = useState(null);
   const [quizConfig, setQuizConfig] = useState(null);
 
-  // Check for existing session on app load
+  // Check for existing session, but don't auto-redirect
   useEffect(() => {
     const sessionUser = UserSession.getUser();
     if (sessionUser) {
@@ -28,30 +28,49 @@ function App() {
     }
   }, []);
 
+  // Log whenever the current page changes
+  useEffect(() => {
+    console.log(`📍 Current page: ${route}`);
+  }, [route]);
+
   const navigate = (to, opts = {}) => {
+    // Handle module navigation
     if (to === 'module' && opts.module) {
       setModuleData(opts.module);
+    } else {
+      setModuleData(null);
     }
-    if (opts && to !== 'module') {
-      setQuizConfig(opts);
+
+    // Handle quiz navigation
+    if ((to === 'quiz' || to === 'quiz-builder') && opts.quizConfig) {
+      setQuizConfig(opts.quizConfig);
+    } else {
+      setQuizConfig(null);
     }
+
     setRoute(to);
   };
 
   const handleLogin = (userData) => {
     setUser(userData);
-    setRoute('modules');
+    setRoute('home'); 
   };
 
   const handleLogout = () => {
     UserSession.clearUser();
     setUser(null);
-    setRoute('home');
+    setRoute('home'); 
   };
 
   return (
     <div className="App-root">
-      <Navbar onNavigate={navigate} user={user} onLogout={handleLogout} />
+      {/* Pass current route so Navbar knows which page is active */}
+      <Navbar
+        onNavigate={navigate}
+        user={user}
+        onLogout={handleLogout}
+        currentPage={route}
+      />
 
       <main className="App-main">
         {route === 'home' && <Home onNavigate={navigate} user={user} />}

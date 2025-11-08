@@ -32,6 +32,17 @@ export default function Modules({ onNavigate }) {
           </li>
         ))}
       </ul>
+
+      <button
+        className="btn"
+        style={{
+          marginTop: '40px',
+          marginLeft: 'auto'
+        }}
+        onClick={() => onNavigate('home')}
+      >Go Home
+      </button>
+      
     </div>
   );
 }

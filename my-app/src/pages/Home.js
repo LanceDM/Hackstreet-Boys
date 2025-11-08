@@ -20,8 +20,19 @@ export default function Home({ onNavigate, user }) {
 
         {user && (
           <>
-            <p className="muted">Signed in as <strong>{user.username}</strong></p>
             <button onClick={() => onNavigate('modules')} className="btn">Browse Modules</button>
+            <button className="btn" onClick={() => onNavigate('quiz', { moduleId: 'intro', title: 'Quick Quiz' })}>Go to Quiz</button>
+            <p
+              className="muted"
+              style={{
+                display: 'flex',
+                gap: '8px',
+                alignItems: 'center',
+                marginLeft: 'auto'  // This pushes it to the right
+              }}
+            >
+              Signed in as <strong>{user.username}</strong>
+          </p>
           </>
         )}
       </div>
