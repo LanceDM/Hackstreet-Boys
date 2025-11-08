@@ -59,31 +59,47 @@ DEFAULT_EVENTS = [
 
 # 🔹 Temporary Quiz entries (for testing or placeholder content)
 TEMP_QUIZZES = [
+    # ---------------------
     # Difficulty A
+    # ---------------------
     {
         "quiz_difficulty": "A",
         "quiz_number": 1,
         "problem_title": "Print Hello World",
-        "problem_description": "Write a function that prints 'Hello, World!'.",
-        "initial_code": "def hello_world():\n    # Write your code here",
+        "problem_description": "Write a function that returns the string 'Hello, World!'.",
+        "initial_code": """#include <string>
+using namespace std;
+
+string hello_world() {
+    // Write your code here
+    return "";
+}
+""",
         "quiz_data": {
-            "answers": ["Hello, World!"],
+            "language_id": 52,  # C++
             "test_cases": [
-                {"input": None, "expected_output": "Hello, World!"}
+                {"input": "", "expected_output": "Hello, World!\n"}
             ]
         }
     },
     {
         "quiz_difficulty": "A",
         "quiz_number": 2,
-        "problem_title": "Check Even/Odd",
-        "problem_description": "Return 'even' if number is even, else 'odd'.",
-        "initial_code": "def even_or_odd(n):\n    # Write your code here",
+        "problem_title": "Check Even or Odd",
+        "problem_description": "Write a function that returns 'even' if n is even, otherwise 'odd'.",
+        "initial_code": """#include <string>
+using namespace std;
+
+string even_or_odd(int n) {
+    // Write your code here
+    return "";
+}
+""",
         "quiz_data": {
-            "answers": ["even", "odd"],
+            "language_id": 52,
             "test_cases": [
-                {"input": [4], "expected_output": "even"},
-                {"input": [7], "expected_output": "odd"}
+                {"input": "4", "expected_output": "even\n"},
+                {"input": "7", "expected_output": "odd\n"}
             ]
         }
     },
@@ -91,31 +107,43 @@ TEMP_QUIZZES = [
         "quiz_difficulty": "A",
         "quiz_number": 3,
         "problem_title": "Count Vowels",
-        "problem_description": "Return the number of vowels in a string.",
-        "initial_code": "def count_vowels(s):\n    # Write your code here",
+        "problem_description": "Write a function that returns the number of vowels in a given string.",
+        "initial_code": """#include <string>
+using namespace std;
+
+int count_vowels(string s) {
+    // Write your code here
+    return 0;
+}
+""",
         "quiz_data": {
-            "answers": [2, 5, 0],
+            "language_id": 52,
             "test_cases": [
-                {"input": ["hello"], "expected_output": 2},
-                {"input": ["beautiful"], "expected_output": 5},
-                {"input": ["why"], "expected_output": 0}
+                {"input": "hello", "expected_output": "2\n"},
+                {"input": "beautiful", "expected_output": "5\n"},
+                {"input": "why", "expected_output": "0\n"}
             ]
         }
     },
 
+    # ---------------------
     # Difficulty B
+    # ---------------------
     {
         "quiz_difficulty": "B",
         "quiz_number": 1,
         "problem_title": "Sum Two Numbers",
-        "problem_description": "Return the sum of two numbers.",
-        "initial_code": "def add(a, b):\n    # Write your code here",
+        "problem_description": "Write a function that returns the sum of two integers.",
+        "initial_code": """int add(int a, int b) {
+    // Write your code here
+    return 0;
+}
+""",
         "quiz_data": {
-            "answers": [3, 5, 10],
+            "language_id": 52,
             "test_cases": [
-                {"input": [1, 2], "expected_output": 3},
-                {"input": [2, 3], "expected_output": 5},
-                {"input": [5, 5], "expected_output": 10}
+                {"input": "1 2", "expected_output": "3\n"},
+                {"input": "5 5", "expected_output": "10\n"}
             ]
         }
     },
@@ -123,14 +151,20 @@ TEMP_QUIZZES = [
         "quiz_difficulty": "B",
         "quiz_number": 2,
         "problem_title": "Find Max in List",
-        "problem_description": "Return the largest number in a list.",
-        "initial_code": "def find_max(nums):\n    # Write your code here",
+        "problem_description": "Write a function that returns the largest number in a list of integers.",
+        "initial_code": """#include <vector>
+using namespace std;
+
+int find_max(vector<int> nums) {
+    // Write your code here
+    return 0;
+}
+""",
         "quiz_data": {
-            "answers": [5, 100, -1],
+            "language_id": 52,
             "test_cases": [
-                {"input": [[1, 3, 5]], "expected_output": 5},
-                {"input": [[100, 20]], "expected_output": 100},
-                {"input": [[-1]], "expected_output": -1}
+                {"input": "3\n1 3 5", "expected_output": "5\n"},
+                {"input": "4\n10 20 5 7", "expected_output": "20\n"}
             ]
         }
     },
@@ -138,30 +172,45 @@ TEMP_QUIZZES = [
         "quiz_difficulty": "B",
         "quiz_number": 3,
         "problem_title": "Palindrome Check",
-        "problem_description": "Return True if the string is a palindrome.",
-        "initial_code": "def is_palindrome(s):\n    # Write your code here",
+        "problem_description": "Write a function that returns true if a string is a palindrome, otherwise false.",
+        "initial_code": """#include <string>
+using namespace std;
+
+bool is_palindrome(string s) {
+    // Write your code here
+    return false;
+}
+""",
         "quiz_data": {
-            "answers": [True, False],
+            "language_id": 52,
             "test_cases": [
-                {"input": ["racecar"], "expected_output": True},
-                {"input": ["hello"], "expected_output": False}
+                {"input": "racecar", "expected_output": "true\n"},
+                {"input": "hello", "expected_output": "false\n"}
             ]
         }
     },
 
+    # ---------------------
     # Difficulty C
+    # ---------------------
     {
         "quiz_difficulty": "C",
         "quiz_number": 1,
         "problem_title": "Reverse a String",
-        "problem_description": "Return the input string in reverse order.",
-        "initial_code": "def reverse_string(s):\n    # Write your code here",
+        "problem_description": "Write a function that returns the input string in reverse order.",
+        "initial_code": """#include <string>
+using namespace std;
+
+string reverse_string(string s) {
+    // Write your code here
+    return "";
+}
+""",
         "quiz_data": {
-            "answers": ["cba", "olleh", ""],
+            "language_id": 52,
             "test_cases": [
-                {"input": ["abc"], "expected_output": "cba"},
-                {"input": ["hello"], "expected_output": "olleh"},
-                {"input": [""], "expected_output": ""}
+                {"input": "abc", "expected_output": "cba\n"},
+                {"input": "hello", "expected_output": "olleh\n"}
             ]
         }
     },
@@ -169,14 +218,18 @@ TEMP_QUIZZES = [
         "quiz_difficulty": "C",
         "quiz_number": 2,
         "problem_title": "Fibonacci Sequence",
-        "problem_description": "Return the nth Fibonacci number (0-indexed).",
-        "initial_code": "def fibonacci(n):\n    # Write your code here",
+        "problem_description": "Write a function that returns the nth Fibonacci number (0-indexed).",
+        "initial_code": """int fibonacci(int n) {
+    // Write your code here
+    return 0;
+}
+""",
         "quiz_data": {
-            "answers": [0, 1, 5],
+            "language_id": 52,
             "test_cases": [
-                {"input": [0], "expected_output": 0},
-                {"input": [1], "expected_output": 1},
-                {"input": [5], "expected_output": 5}
+                {"input": "0", "expected_output": "0\n"},
+                {"input": "5", "expected_output": "5\n"},
+                {"input": "10", "expected_output": "55\n"}
             ]
         }
     },
@@ -184,14 +237,21 @@ TEMP_QUIZZES = [
         "quiz_difficulty": "C",
         "quiz_number": 3,
         "problem_title": "Binary Search",
-        "problem_description": "Implement binary search on a sorted list.",
-        "initial_code": "def binary_search(arr, target):\n    # Write your code here",
+        "problem_description": "Write a function that performs binary search on a sorted list and returns the index of the target or -1 if not found.",
+        "initial_code": """#include <vector>
+using namespace std;
+
+int binary_search(vector<int> arr, int target) {
+    // Write your code here
+    return -1;
+}
+""",
         "quiz_data": {
-            "answers": [2, -1],
+            "language_id": 52,
             "test_cases": [
-                {"input": [[1, 3, 5, 7], 5], "expected_output": 2},
-                {"input": [[1, 3, 5], 4], "expected_output": -1}
+                {"input": "4\n1 3 5 7\n5", "expected_output": "2\n"},
+                {"input": "3\n1 3 5\n4", "expected_output": "-1\n"}
             ]
         }
-    },
+    }
 ]

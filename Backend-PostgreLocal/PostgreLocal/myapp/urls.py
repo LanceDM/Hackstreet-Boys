@@ -2,7 +2,7 @@ from django.contrib import admin
 from django.urls import path
 from django.http import HttpResponse
 
-from myapp.views import RegisterView, UserDetailView, LoginView, QuizView
+from myapp.views import *
 
 
 # Simple root endpoint for testing
@@ -21,4 +21,9 @@ urlpatterns = [
 
     # Quiz endpoints
     path('quizzes/', QuizView.as_view(), name='quiz-list'),
+
+    # Code execution endpoints
+    path("execute/", CodeExecutionView.as_view(), name="execute"),
+    path("result/<str:token>/", CodeResultView.as_view(), name="result"),
+
 ]

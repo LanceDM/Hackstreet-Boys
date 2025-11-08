@@ -4,7 +4,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
-
+from .utils.judge0_client import submit_code, get_submission_result
 from .models import User, Quiz
 from .serializer import UserSerializer, QuizSerializer
 
@@ -112,3 +112,51 @@ class QuizView(APIView):
         quizzes = Quiz.objects.all()
         serializer = QuizSerializer(quizzes, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+#  -------------------------
+# Code Execution with Judge0
+# -------------------------
+class CodeExecutionView(APIView):
+    """
+    Handles code submissions to Judge0 and returns a submission token.
+    """
+
+    def post(self, request):
+        code = request.data.get("source_code")
+        language_id = request.data.get("language_id")
+        stdin = request.data.get("stdin", "")
+
+        # Validate incoming data
+        if not code or not language_id:
+            return Response(
+                {"error": "Both 'source_code' and 'language_id' are required."},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        try:
+            token = submit_code(code, language_id, stdin)
+            return Response({"token": token}, status=status.HTTP_200_OK)
+        except Exception as e:
+            # Log and return a readable error if Judge0 fails
+            print("🔥 Error submitting code to Judge0:", str(e))
+            return Response(
+                {"error": f"Failed to submit code: {str(e)}"},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            )
+
+class CodeResultView(APIView):
+    """
+    Retrieves the result of a Judge0 submission by token.
+    """
+
+    def get(self, request, token):
+        try:
+            result = get_submission_result(token)
+            return Response(result, status=status.HTTP_200_OK)
+        except Exception as e:
+            print("🔥 Error retrieving result from Judge0:", str(e))
+            return Response(
+                {"error": f"Failed to retrieve result: {str(e)}"},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            )
