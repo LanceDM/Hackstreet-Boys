@@ -1,6 +1,6 @@
 import React, { Component, createRef } from "react";
-  import CameraStream from "./CameraStream";
-  import { sharedPoseDetector } from "./PoseDetector";
+import CameraStream from "./CameraStream";
+import { sharedPoseDetector } from "./PoseDetector";
 
 class CameraPreview extends Component {
   constructor(props) {
@@ -10,119 +10,110 @@ class CameraPreview extends Component {
     this.state = {
       visible: false,
       isStreaming: false,
-      message: null, // can be updated by PoseDetector later
+      isRecording: false,
+      message: null,
     };
     this.cameraStream = null;
-  this._hiddenVideo = null;
-  this._drawRaf = null;
-  this._poseHandler = null;
-  this._lastLandmarks = null;
-  this._poseDetector = null;
+    this._hiddenVideo = null;
+    this._drawRaf = null;
+    this._poseDetector = null;
+    this.mediaRecorder = null;
+    this.recordedChunks = [];
   }
 
   componentDidUpdate(prevProps) {
-    // respond to poseEnabled prop changes
     if (prevProps.poseEnabled !== this.props.poseEnabled) {
       try {
         sharedPoseDetector.setEnabled(!!this.props.poseEnabled);
       } catch (e) {}
 
-      // if enabling and camera is active, start detector
       if (this.props.poseEnabled && this.cameraStream && CameraStream.getCurrentStream()) {
         if (!this._poseDetector) {
-          this._poseDetector = sharedPoseDetector;
-          this._poseDetector.videoElement = this._hiddenVideo;
-          this._poseDetector.canvasElement = this.canvasRef.current;
-          this._poseDetector.onResult = (det) => {
-            if (this.props.onPoseResult) this.props.onPoseResult(det);
-          };
-          this._poseDetector.init().then(() => this._poseDetector.start()).catch(() => {});
+          try {
+            this._poseDetector = sharedPoseDetector;
+            this._poseDetector.videoElement = this._hiddenVideo;
+            this._poseDetector.canvasElement = this.canvasRef.current;
+            this._poseDetector.onResult = (det) => {
+              if (this.props.onPoseResult) this.props.onPoseResult(det);
+            };
+            this._poseDetector.init().then(() => this._poseDetector.start()).catch(() => {});
+          } catch (err) {
+            console.error("Pose detector error:", err);
+          }
         }
       }
 
-      // if disabling, stop and detach
       if (!this.props.poseEnabled && this._poseDetector) {
         try { this._poseDetector.stop(); } catch (e) {}
-        try { this._poseDetector.videoElement = null; } catch (e) {}
-        try { this._poseDetector.canvasElement = null; } catch (e) {}
         this._poseDetector = null;
       }
     }
   }
 
   async startCamera() {
-    if (!this.cameraStream) {
-      this.cameraStream = new CameraStream(this.videoRef.current);
-    }
-
     try {
-  const s = await this.cameraStream.start();
-      // call parent hook if provided
+      if (!this.cameraStream) this.cameraStream = new CameraStream(this.videoRef.current);
+
+      const s = await this.cameraStream.start();
+      if (!s) throw new Error("No camera stream available.");
+
       if (this.props.onStreamReady) this.props.onStreamReady(s);
       this.setState({ isStreaming: true, message: null });
       this._ensureHiddenVideoAndLoop(s);
 
-      // instantiate PoseDetector attached to the hidden video and visible canvas
-      try {
-        // attach detector only if pose detection enabled
-        if (this.props.poseEnabled !== false && sharedPoseDetector.getEnabled()) {
+      if (this.props.poseEnabled !== false && sharedPoseDetector.getEnabled()) {
+        try {
           this._poseDetector = sharedPoseDetector;
           this._poseDetector.videoElement = this._hiddenVideo;
           this._poseDetector.canvasElement = this.canvasRef.current;
           this._poseDetector.onResult = (det) => {
             if (this.props.onPoseResult) this.props.onPoseResult(det);
           };
-          // initialize and start the detector
-          this._poseDetector.init().then(() => this._poseDetector.start()).catch(() => {});
+          await this._poseDetector.init();
+          await this._poseDetector.start();
+        } catch (err) {
+          console.error("Pose detector start error:", err);
         }
-      } catch (err) {
-        console.warn('PoseDetector failed to start', err);
       }
     } catch (err) {
-      console.error(err);
-      this.setState({ message: "Camera access denied or unavailable.", isStreaming: false });
+      console.error("Camera start error:", err);
+      this.setState({ message: "Camera unavailable or permission denied.", isStreaming: false });
     }
   }
 
   stopCamera() {
     try {
-      // stop and remove pose detector
       if (this._poseDetector) {
         try { this._poseDetector.stop(); } catch (e) {}
-        // detach video references but keep shared instance
-        try { this._poseDetector.videoElement = null; } catch (e) {}
-        try { this._poseDetector.canvasElement = null; } catch (e) {}
         this._poseDetector = null;
       }
-      // stop draw loop
+
       if (this._drawRaf) {
         cancelAnimationFrame(this._drawRaf);
         this._drawRaf = null;
       }
-      // stop hidden video
+
       if (this._hiddenVideo) {
         try { this._hiddenVideo.pause(); } catch (e) {}
         this._hiddenVideo.srcObject = null;
         this._hiddenVideo = null;
       }
 
-      if (this.cameraStream) {
-        this.cameraStream.stop();
-      }
+      if (this.cameraStream) this.cameraStream.stop();
       this.setState({ isStreaming: false });
-      // no global events — camera stream is centrally available via CameraStream.getCurrentStream()
-    } catch (e) {
-      console.warn(e);
+    } catch (err) {
+      console.error("Camera stop error:", err);
+      this.setState({ message: "Failed to stop camera." });
     }
   }
 
   _ensureHiddenVideoAndLoop(stream) {
-  if (!this.canvasRef.current) return;
+    if (!this.canvasRef.current) return;
     if (!this._hiddenVideo) {
-      this._hiddenVideo = document.createElement('video');
+      this._hiddenVideo = document.createElement("video");
       this._hiddenVideo.muted = true;
       this._hiddenVideo.playsInline = true;
-      this._hiddenVideo.style.display = 'none';
+      this._hiddenVideo.style.display = "none";
       document.body.appendChild(this._hiddenVideo);
     }
     this._hiddenVideo.srcObject = stream;
@@ -130,24 +121,17 @@ class CameraPreview extends Component {
 
     const drawLoop = () => {
       const canvas = this.canvasRef.current;
-      const ctx = canvas && canvas.getContext('2d');
+      const ctx = canvas && canvas.getContext("2d");
       if (ctx && this._hiddenVideo && this._hiddenVideo.readyState >= 2) {
-        // draw video frame to canvas (no mirror)
         ctx.clearRect(0, 0, canvas.width, canvas.height);
-        try {
-          ctx.drawImage(this._hiddenVideo, 0, 0, canvas.width, canvas.height);
-        } catch (e) {
-          // ignore draw errors until ready
-        }
-        // draw pose overlay from shared detector's latest landmarks (if available and enabled)
+        try { ctx.drawImage(this._hiddenVideo, 0, 0, canvas.width, canvas.height); } catch (e) {}
+
         try {
           if (this.props.poseEnabled !== false && sharedPoseDetector.getEnabled()) {
             const lm = sharedPoseDetector.latestLandmarks;
             if (lm) sharedPoseDetector.drawPose(ctx, lm);
           }
-        } catch (e) {
-          // ignore draw errors
-        }
+        } catch (e) {}
       }
       this._drawRaf = requestAnimationFrame(drawLoop);
     };
@@ -155,25 +139,75 @@ class CameraPreview extends Component {
     if (!this._drawRaf) this._drawRaf = requestAnimationFrame(drawLoop);
   }
 
-  toggleVisibility = () => {
-    this.setState((prev) => ({ visible: !prev.visible }));
+  startRecording = () => {
+    try {
+      if (!this._hiddenVideo || this.state.isRecording) return;
+      const stream = this._hiddenVideo.srcObject;
+      if (!stream) throw new Error("No video stream to record.");
+
+      this.mediaRecorder = new MediaRecorder(stream);
+      this.recordedChunks = [];
+
+      this.mediaRecorder.ondataavailable = (e) => {
+        if (e.data.size > 0) this.recordedChunks.push(e.data);
+      };
+      this.mediaRecorder.onstop = this.handleRecordingStop;
+      this.mediaRecorder.start();
+
+      this.setState({ isRecording: true, message: "Recording..." });
+    } catch (err) {
+      console.error("Start recording error:", err);
+      this.setState({ message: "Failed to start recording." });
+    }
   };
 
+  stopRecording = () => {
+    try {
+      if (!this.mediaRecorder || !this.state.isRecording) return;
+      this.mediaRecorder.stop();
+      this.setState({ isRecording: false, message: "Stopped recording." });
+    } catch (err) {
+      console.error("Stop recording error:", err);
+      this.setState({ message: "Failed to stop recording." });
+    }
+  };
+
+  handleRecordingStop = () => {
+    try {
+      if (!this.recordedChunks.length) throw new Error("No recorded data available.");
+
+      const blob = new Blob(this.recordedChunks, { type: "video/webm" });
+      const url = URL.createObjectURL(blob);
+
+      // Automatic download
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "recording.webm";
+      a.click();
+
+      this.setState({ message: "Download complete." });
+      setTimeout(() => this.setState({ message: null }), 2000);
+    } catch (err) {
+      console.error("Download error:", err);
+      this.setState({ message: "Failed to download recording." });
+    }
+  };
+
+  toggleVisibility = () => this.setState(prev => ({ visible: !prev.visible }));
+
   componentWillUnmount() {
-    this.stopCamera();
+    try { this.stopCamera(); } catch (e) {}
   }
 
   componentDidMount() {
-    // if autoStart prop is set, start camera automatically
     if (this.props.autoStart) this.startCamera();
   }
 
   render() {
-    const { visible, isStreaming, message } = this.state;
+    const { visible, isStreaming, isRecording, message } = this.state;
 
     return (
       <>
-        {/* Camera container */}
         <div
           style={{
             position: "fixed",
@@ -194,20 +228,13 @@ class CameraPreview extends Component {
             opacity: visible ? 1 : 0,
           }}
         >
-            {/* visible preview is now a canvas (video frames are drawn into it) */}
-            <canvas
-              ref={this.canvasRef}
-              width={320}
-              height={200}
-              style={{
-                width: "100%",
-                height: "100%",
-                borderRadius: "6px",
-                display: 'block'
-              }}
-            />
+          <canvas
+            ref={this.canvasRef}
+            width={320}
+            height={200}
+            style={{ width: "100%", height: "100%", borderRadius: "6px", display: "block" }}
+          />
 
-          {/* Optional feedback text (controlled by PoseDetector) */}
           {message && (
             <div
               style={{
@@ -246,15 +273,46 @@ class CameraPreview extends Component {
                   borderRadius: "5px",
                   padding: "6px 12px",
                   cursor: "pointer",
+                  marginRight: "5px",
                 }}
               >
                 ■ Stop
               </button>
             )}
+
+            {isStreaming && !isRecording && (
+              <button
+                onClick={this.startRecording}
+                style={{
+                  backgroundColor: "#ffc107",
+                  color: "black",
+                  border: "none",
+                  borderRadius: "5px",
+                  padding: "6px 12px",
+                  cursor: "pointer",
+                }}
+              >
+                ⏺ Record
+              </button>
+            )}
+            {isRecording && (
+              <button
+                onClick={this.stopRecording}
+                style={{
+                  backgroundColor: "#17a2b8",
+                  color: "white",
+                  border: "none",
+                  borderRadius: "5px",
+                  padding: "6px 12px",
+                  cursor: "pointer",
+                }}
+              >
+                ⏹ Stop
+              </button>
+            )}
           </div>
         </div>
 
-        {/* Floating toggle button */}
         <button
           onClick={this.toggleVisibility}
           style={{
