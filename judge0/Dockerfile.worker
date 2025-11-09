@@ -1,0 +1,33 @@
+# syntax=docker/dockerfile:1
+FROM judge0/judge0:latest
+
+USER root
+WORKDIR /api
+
+# 🔧 Fix Debian Buster repo sources and install netcat + redis-cli
+RUN set -eux; \
+    sed -i 's|deb.debian.org|archive.debian.org|g' /etc/apt/sources.list; \
+    sed -i 's|security.debian.org|archive.debian.org|g' /etc/apt/sources.list; \
+    echo 'Acquire::Check-Valid-Until "false";' > /etc/apt/apt.conf.d/99ignore-release-date; \
+    apt-get update -qq && \
+    apt-get install -y --no-install-recommends netcat-traditional redis-tools && \
+    rm -rf /var/lib/apt/lists/*
+
+
+# 💎 Install Sidekiq (Ruby background worker)
+RUN /usr/local/ruby-2.7.0/bin/gem install sidekiq:6.5.8 --no-document
+
+# 🧾 Copy your worker setup
+COPY config/sidekiq.yml /config/sidekiq.yml
+COPY lib/worker.rb /api/lib/worker.rb
+COPY worker_entrypoint.sh /worker_entrypoint.sh
+
+RUN chmod +x /worker_entrypoint.sh
+
+ENV LANG=en_US.UTF-8 \
+    LC_ALL=en_US.UTF-8 \
+    PATH="/usr/local/ruby-2.7.0/bin:${PATH}"
+
+RUN mkdir -p /box && chmod 777 /box
+
+ENTRYPOINT ["/worker_entrypoint.sh"]
