@@ -101,8 +101,18 @@ DATABASES = {
         "PASSWORD": os.getenv("DB_PASSWORD", "postgres"),
         "HOST": os.getenv("DB_HOST", "localhost"),
         "PORT": os.getenv("DB_PORT", "5432"),
-    }
+    },
+
+    "data_storage": {
+        "ENGINE": os.getenv("DATA_STORAGE_ENGINE", "django.db.backends.postgresql"),
+        "NAME": os.getenv("DATA_STORAGE_NAME", "data_storage"),
+        "USER": os.getenv("DATA_STORAGE_USER", "storage_user"),
+        "PASSWORD": os.getenv("DATA_STORAGE_PASSWORD", "storage_pass"),
+        "HOST": os.getenv("DATA_STORAGE_HOST", "data-storage"),  # matches docker-compose service name
+        "PORT": os.getenv("DATA_STORAGE_PORT", "5432"),
+    },
 }
+
 
 # ---------------------------------------------------------------------------
 # Password Validation

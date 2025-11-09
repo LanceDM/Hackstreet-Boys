@@ -1,0 +1,48 @@
+version: "3.8"
+
+services:
+  backend:
+    build: .
+    container_name: django_backend
+    env_file:
+      - ./PostgreLocal/.env
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+    volumes:
+      - ./PostgreLocal:/app/PostgreLocal
+    networks:
+      - hackstreet-net
+
+  db:
+    image: postgres:17
+    container_name: backend_db
+    environment:
+      POSTGRES_DB: ${DB_NAME}
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    ports:
+      - "5434:5432"  # external:internal
+    volumes:
+      - backend_pgdata:/var/lib/postgresql/data
+    networks:
+      - hackstreet-net
+
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - "8080:8080"
+    depends_on:
+      - db
+    networks:
+      - hackstreet-net
+
+volumes:
+  backend_pgdata:
+
+networks:
+  hackstreet-net:
+    external: true
+    name: hackstreet-net

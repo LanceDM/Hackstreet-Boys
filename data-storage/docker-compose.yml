@@ -1,0 +1,30 @@
+version: "3.8"
+
+services:
+  data-storage:
+    build:
+      context: .
+      args:
+        POSTGRES_DB: ${POSTGRES_DB}
+        POSTGRES_USER: ${POSTGRES_USER}
+        POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+        VIDEO_STORAGE_PATH: ${VIDEO_STORAGE_PATH}
+    container_name: ${CONTAINER_NAME}
+    env_file:
+      - .env
+    ports:
+      - "${EXPOSE_PORT}:5432"
+    volumes:
+      - data_storage_volume:/var/lib/postgresql/data
+      - ./videos/uploads:${VIDEO_STORAGE_PATH}
+    restart: always
+    networks:
+      - hackstreet-net
+
+volumes:
+  data_storage_volume:
+
+networks:
+  hackstreet-net:
+    external: true
+    name: hackstreet-net

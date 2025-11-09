@@ -12,8 +12,7 @@ def home(request):
 urlpatterns = [
     # Root and admin
     path('', home, name='home'),
-    path('admin/', admin.site.urls),
-
+    
     # User endpoints
     path('users/', RegisterView.as_view(), name='user-list'),
     path('users/<str:username>/', UserDetailView.as_view(), name='user-detail'),

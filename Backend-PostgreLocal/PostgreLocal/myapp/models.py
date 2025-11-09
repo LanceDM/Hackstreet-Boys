@@ -37,42 +37,42 @@ class User(models.Model):
         return self.username
 
 
-class UserVideo(models.Model):
-    id = models.AutoField(primary_key=True)
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='videos')
-    video_url = models.TextField()
+# class UserVideo(models.Model):
+#     id = models.AutoField(primary_key=True)
+#     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='videos')
+#     video_url = models.TextField()
 
-    class Meta:
-        db_table = 'user_video'
+#     class Meta:
+#         db_table = 'user_video'
 
-    def __str__(self):
-        return self.user.username
-
-
-class EventList(models.Model):
-    event_code = models.CharField(max_length=10, unique=True, primary_key=True)  # e.g. A1, A2, A3...
-    action = models.CharField(max_length=50)                   # e.g. start_test
-    description = models.TextField(blank=True, null=True)
-
-    class Meta:
-        db_table = 'event_list'
-
-    def __str__(self):
-        return f"{self.event_code} - {self.action}"
+#     def __str__(self):
+#         return self.user.username
 
 
-class LogData(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='logs')
-    event = models.ForeignKey(EventList, on_delete=models.CASCADE, related_name='logs')
-    timestamp = models.DateTimeField(auto_now_add=True)
-    data = models.TextField(blank=True, null=True)
-    num_actions = models.IntegerField(blank=True, null=True)
+# class EventList(models.Model):
+#     event_code = models.CharField(max_length=10, unique=True, primary_key=True)  # e.g. A1, A2, A3...
+#     action = models.CharField(max_length=50)                   # e.g. start_test
+#     description = models.TextField(blank=True, null=True)
 
-    class Meta:
-        db_table = 'log_data'
+#     class Meta:
+#         db_table = 'event_list'
 
-    def __str__(self):
-        return f"{self.user.username} - {self.event.event_code} - {self.timestamp.strftime('%Y-%m-%d %H:%M:%S')}"
+#     def __str__(self):
+#         return f"{self.event_code} - {self.action}"
+
+
+# class LogData(models.Model):
+#     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='logs')
+#     event = models.ForeignKey(EventList, on_delete=models.CASCADE, related_name='logs')
+#     timestamp = models.DateTimeField(auto_now_add=True)
+#     data = models.TextField(blank=True, null=True)
+#     num_actions = models.IntegerField(blank=True, null=True)
+
+#     class Meta:
+#         db_table = 'log_data'
+
+#     def __str__(self):
+#         return f"{self.user.username} - {self.event.event_code} - {self.timestamp.strftime('%Y-%m-%d %H:%M:%S')}"
 
 
 class Quiz(models.Model):
@@ -109,11 +109,3 @@ class UserQuizAttempt(models.Model):
     def __str__(self):
           return f"{self.user.username} - {self.quiz.quiz_difficulty}{self.quiz.quiz_number} - {'Correct' if self.is_correct else 'Incorrect'}"
     
-# run seed data after migrations
-# python manage.py migrate && python manage.py seed
-
-# @receiver(post_migrate)
-# def seed_data(sender, **kwargs):
-#     from myapp.management.seed import Command
-#     command = Command()
-#     command.handle()    
