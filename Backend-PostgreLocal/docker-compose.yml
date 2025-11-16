@@ -19,9 +19,9 @@ services:
     image: postgres:17
     container_name: backend_db
     environment:
-      POSTGRES_DB: ${DB_NAME}
-      POSTGRES_USER: ${DB_USER}
-      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: backend_db
+      POSTGRES_USER: backend_user
+      POSTGRES_PASSWORD: backend_pass
     ports:
       - "5434:5432"  # external:internal
     volumes:

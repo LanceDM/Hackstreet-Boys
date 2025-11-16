@@ -139,24 +139,7 @@ function CodeEditor({ onSubmit, initialCode, onChange }) {
         )}
       </div>
 
-      {/* Optional user input box */}
-      <textarea
-        placeholder="Enter program input here..."
-        value={input}
-        onChange={(e) => setInput(e.target.value)}
-        style={{
-          width: "100%",
-          height: 60,
-          backgroundColor: "#252526",
-          color: "#d4d4d4",
-          border: "none",
-          outline: "none",
-          padding: 8,
-          fontFamily: "monospace",
-          fontSize: 13,
-          marginTop: 8,
-        }}
-      />
+
 
       <button
         onClick={handleRun}
